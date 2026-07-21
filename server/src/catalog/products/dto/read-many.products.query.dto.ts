@@ -1,0 +1,37 @@
+import { IsInt, IsOptional, Length, Max, Min } from "class-validator";
+import { MAX_PAGE_SIZE } from "src/config";
+
+export class ReadManyProductsQueryDTO {
+  @IsOptional()
+  @Length(1, 50)
+  search: string | undefined | null;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(MAX_PAGE_SIZE)
+  pageSize: number = MAX_PAGE_SIZE;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  pageNumber: number = 1;
+
+  get take(): number {
+    return this.pageSize;
+  }
+
+  get skip(): number {
+    return this.pageSize * (this.pageNumber - 1);
+  }
+
+  constructor(
+    search: string | undefined | null,
+    pageSize: number,
+    pageNumber: number,
+  ) {
+    this.search = search;
+    this.pageSize = pageSize;
+    this.pageNumber = pageNumber;
+  }
+}
